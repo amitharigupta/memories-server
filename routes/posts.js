@@ -10,4 +10,6 @@ router.patch('/:id', PostController.updatePost)
 
 router.delete('/:id', PostController.deletePost)
 
+router.patch('/:id/likepost', PostController.likePost)
+
 module.exports = router;

@@ -72,4 +72,24 @@ module.exports = {
       return res.status(409).json({ status: 404, message: error.message });
     }
   },
+  likePost: async (req, res, next) => {
+    const id = req.params.id;
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id))
+        return res.status(404).json({ status: 200, message: "No Post with that id" });
+
+      const post = await PostMessage.findById(id);
+      const updatedPost = await PostMessage.findByIdAndUpdate(id, { likeCount: post.likeCount + 1 }, { new: true });
+
+      if(updatedPost) {
+        return res.status(201).json({
+          status: 200,
+          message: "Post Updated Successfully",
+          data: updatedPost,
+        });
+      }
+    } catch (error) {
+      return res.status(409).json({ status: 404, message: error.message });
+    }
+  }
 };
