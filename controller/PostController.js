@@ -42,13 +42,31 @@ module.exports = {
       );
 
       if (updatedPost) {
+        return res.status(201).json({
+          status: 200,
+          message: "Post Updated Successfully",
+          data: updatedPost,
+        });
+      }
+    } catch (error) {
+      return res.status(409).json({ status: 404, message: error.message });
+    }
+  },
+  deletePost: async (req, res, next) => {
+    const id = req.params.id;
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id))
         return res
-          .status(201)
-          .json({
-            status: 200,
-            message: "Post Updated Successfully",
-            data: updatedPost,
-          });
+          .status(404)
+          .json({ status: 200, message: "No Post with that id" });
+
+      let deletedPost = await PostMessage.findByIdAndRemove(id);
+      if (deletedPost) {
+        return res.status(201).json({
+          status: 200,
+          message: "Post Deleted Successfully",
+          data: deletedPost,
+        });
       }
     } catch (error) {
       return res.status(409).json({ status: 404, message: error.message });
